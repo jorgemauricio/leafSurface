@@ -24,12 +24,10 @@ def checkStatus(vL, vA, vB):
     """
     Validacion de las marcas, si el pixel coincide con algun color regresa True
     """
-    status = False
     if (vL >= 40 and vL <= 80) and (vA >= 50 and vA <= 80) and (vB >= -40 and vB <= 10):
-        status = True
+        return True
     else:
-        status = False
-    return status
+        return False
 
 def checkStatusArea(vL, vA, vB):
     """
@@ -48,10 +46,6 @@ def checkStatusArea(vL, vA, vB):
 
 # Function RGB to HLS
 def convertColors(vr, vg, vb):
-    checkStatusArea(vL, vA, vB):
-    """
-    
-    """
 	r = vr/255.0
 	g = vg/255.0
 	b = vb/255.0
@@ -68,9 +62,8 @@ def convertColors(vr, vg, vb):
 
 # Function RGB to Lab
 def rgbToLab(vr, vg, vb):
-    checkStatusArea(vL, vA, vB):
     """
-    Convertir los colores del espectro de color RGB a Lab
+    Convertir colores del espectro RGB a Lab
     """
     r = (vr + 0.0) / 255
     g = (vg + 0.0) / 255
@@ -156,6 +149,7 @@ noCheckPoints = "x,y,v\n"
 startProcessing = strftime("%Y-%m-%d %H:%M:%S")
 
 #%% Find marks
+print("Tiempo inicial: {}".format(startProcessing))
 print("Searching for marks...")
 for u in range(1, x):
     for v in range(1, y):
@@ -170,6 +164,10 @@ for u in range(1, x):
             totalOfPoints += "{},{},0\n".format(u,v)
         counter += 1
 print("Marks done...")
+
+#%% Start processing time
+endProcessing = strftime("%Y-%m-%d %H:%M:%S")
+print("Tiempo inicial: {}".format(endProcessing))
 
 #%% check points
 textFileCheckPoints = open('data/checkPoints.csv', "w")
