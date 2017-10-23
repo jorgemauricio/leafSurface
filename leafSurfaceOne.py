@@ -19,6 +19,9 @@ from scipy import misc
 import pandas as pd
 from os.path import expanduser
 
+#%% estilo de la grafica
+plt.style.use('ggplot')
+
 #%% Functions
 def checkStatus(vL, vA, vB):
     """
@@ -172,16 +175,6 @@ textFileCheckPoints = open('data/checkPoints.csv', "w")
 textFileCheckPoints.write(checkPoints)
 textFileCheckPoints.close()
 
-#%% no Check Points
-#textFileNoCheckPoints = open('data/noCheckPoints.csv', "w")
-#textFileNoCheckPoints.write(noCheckPoints)
-#textFileNoCheckPoints.close()
-
-#%% total of points
-#textFileTotalOfPoints = open('data/totalOfPoints.csv', "w")
-#textFileTotalOfPoints.write(totalOfPoints)
-#textFileTotalOfPoints.close()
-
 #%% Read check points
 dataCheckPoints = pd.read_csv('data/checkPoints.csv')
 
@@ -250,27 +243,29 @@ for u in range(1, x):
                     counterBackground += 1
 
 #%% size of the side
-sideX = 24.0 / x
-sideY = 17.7 / y
+sideX = 24.0 / abs(x1-x4)
+sideY = 17.7 / abs(y1-y4)
 
 #%% Generate area
-print("No pixeles de color: {}".format(counterColors))
+print("***** Color pixels: {}".format(counterColors))
 areaFoliar = (sideX * sideY) * counterColors
-print("Area Foliar: {} cm2".format(areaFoliar))
+print("***** Leaf Surface: {} cm2".format(areaFoliar))
 
 #%% area points
-textFileTotalOfPoints = open('data/areaPoints.csv', "w")
+tempTitleFile = 'data/areaPoints.csv'
+textFileTotalOfPoints = open(tempTitleFile, "w")
 textFileTotalOfPoints.write(areaPoints)
 textFileTotalOfPoints.close()
 
 #%% generate scatter plot
 
-#%%	Scatter Plot
-dataScatterPlot = pd.read_csv("data/checkPoints.csv")
+#%% Scatter Plot
+tempTitleFile = 'data/areaPoints.csv'
+dataScatterPlot = pd.read_csv(tempTitleFile)
 xValues = dataScatterPlot['x']
 yValues = dataScatterPlot['y']
 
-plt.clf()
+#%% plot the points
 fig, ax = plt.subplots()
 ax.set_title("Mapping")
 ax.set_xlabel("x")
@@ -278,5 +273,5 @@ ax.set_ylabel("y")
 ax.scatter(xValues, yValues, color="blue", marker="o")
 ax.legend(['punto'])
 ax.grid(False)
-plt.savefig('results/test.png')
-plt.show()
+tempTitleFile = 'results/area.png'
+plt.savefig(tempTitleFile)
