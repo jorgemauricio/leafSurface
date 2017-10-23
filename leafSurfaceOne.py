@@ -19,14 +19,6 @@ from scipy import misc
 import pandas as pd
 from os.path import expanduser
 
-#%% Clear terminal
-os.system('clear')
-
-#%% chance workdirectory
-home = expanduser("~")
-home += "/Documents/Research/leafSurface"
-os.chdir(home)
-
 #%% Functions
 def checkStatus(vL, vA, vB):
     status = False
