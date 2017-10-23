@@ -100,5 +100,8 @@ ENV/
 # data folder
 /data
 
+# results folder
+/results
+
 # mypy
 .mypy_cache/
