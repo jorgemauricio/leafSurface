@@ -22,10 +22,8 @@ from os.path import expanduser
 #%% Functions
 def checkStatus(vL, vA, vB):
     status = False
-    if (vL >= 40 and vL <= 80):
-        if (vA >= 50 and vA <= 80):
-            if (vB >= -40 and vB <= 10):
-                status = True
+    if (vL >= 40 and vL <= 80) and (vA >= 50 and vA <= 80) and (vB >= -40 and vB <= 10):
+        status = True
     else:
         status = False
     return status
