@@ -30,9 +30,9 @@ os.chdir(home)
 #%% Functions
 def checkStatus(vL, vA, vB):
     status = False
-    if (vL >= 40 and vL <= 80):
-        if (vA >= 50 and vA <= 80):
-            if (vB >= -40 and vB <= 10):
+    if (vL >= 40.0 and vL <= 80.0):
+        if (vA >= 50.0 and vA <= 80.0):
+            if (vB >= -40.0 and vB <= 10.0):
                 status = True
     else:
         status = False
@@ -41,10 +41,10 @@ def checkStatus(vL, vA, vB):
 def checkStatusArea(vL, vA, vB):
     status = False
     # validate grayscale
-    if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5):
+    if (vL >= 0 and vL <= 100.0 and vA > -5.0 and vA < 5.0 and vB > -5.0 and vB < 5.0):
         status = False
     # validate mark color
-    elif (vL >= 40 and vL <= 80 and vA >= 10 and vA <= 80 and vB >= -40 and vB <= 10):
+    elif (vL >= 40.0 and vL <= 80.0 and vA >= 50.0 and vA <= 80.0 and vB >= -40.0 and vB <= 10.0):
         status = False
     else:
         status = True
@@ -119,164 +119,187 @@ def rgbToLab(vr, vg, vb):
     	return var_L, var_a, var_b 
 
 #%% load image
-tempTitleImage = "images/4.jpg"
-im = Image.open(tempTitleImage) # Can be many different formats.
-pix = im.load()
-            
-#%% size of the image
-x, y = im.size  # size of the image
-print("X: %d Y: %d" % (x, y))
+fileList = [x for x in os.listdir('images') if x.endswith('.JPG')]
 
-#%% Total of pixels 
-totalPixeles = x * y      # Print Y
-print("Total de pixeles: %d" % totalPixeles)
+print(fileList)
 
-#%% variables
-counter = 0.0
-counterBackground = 0
-counterColors = 0 
-arrayColors = []
-#statusColor = False
-statusCounting = False
-xInicial = 0
-yInicial = 0
-xFinal = 0
-yFinal = 0
+for file in fileList:
+    tempTitleImage = "images/{}".format(file)
+    tempTitle = file.split('.')
+    im = Image.open(tempTitleImage) # Can be many different formats.
+    pix = im.load()
+                
+    #%% size of the image
+    x, y = im.size  # size of the image
+    print("***** Size of file {}:".format(file))
+    print("***** X: %d Y: %d" % (x, y))
 
-totalOfPoints = "x,y,v\n"
-checkPoints = "x,y,v\n"
-noCheckPoints = "x,y,v\n"
+    #%% Total of pixels 
+    totalPixeles = x * y      # Print Y
+    print("***** Total Pixels: {}".format(totalPixeles))
 
+    #%% variables
+    counter = 0.0
+    counterBackground = 0
+    counterColors = 0 
+    arrayColors = []
+    #statusColor = False
+    statusCounting = False
+    xInicial = 0
+    yInicial = 0
+    xFinal = 0
+    yFinal = 0
 
-#%% Start processing time
-startProcessing = strftime("%Y-%m-%d %H:%M:%S")
+    totalOfPoints = "x,y,v\n"
+    checkPoints = "x,y,l,a,b\n"
+    noCheckPoints = "x,y,v\n"
 
-#%% Find marks
-print("Searching for marks...")
-for u in range(1, x):
-    for v in range(1, y):
-        vR, vG, vB = pix[u, v]
-        valueL, valueA, valueB = rgbToLab(vR, vG, vB)
-        statusColor = checkStatus(valueL, valueA, valueB)
-        if statusColor:
-            checkPoints += "{},{},1\n".format(u,v)
-            totalOfPoints += "{},{},1\n".format(u,v)
-        else:
-            noCheckPoints += "{},{},0\n".format(u,v)
-            totalOfPoints += "{},{},0\n".format(u,v)
-        counter += 1
-print("Marks done...")
+    #%% status Bar
+    #def displayStatusBar(xV, yV, c):
+    #    sys.stdout.write('\r')
+    #    totalOfPoints = xV * yV
+    #    valueToDisplay = c * 100 / totalOfPoints
+    #    sys.stdout.write("[{}] {}".format('='*int(valueToDisplay/10), round(valueToDisplay,2)))
+    #    sys.stdout.flush()
+        
+    #%% Start processing time
+    startProcessing = strftime("%Y-%m-%d %H:%M:%S")
 
-#%% check points
-textFileCheckPoints = open('data/checkPoints.csv', "w")
-textFileCheckPoints.write(checkPoints)
-textFileCheckPoints.close()
-
-#%% no Check Points
-#textFileNoCheckPoints = open('data/noCheckPoints.csv', "w")
-#textFileNoCheckPoints.write(noCheckPoints)
-#textFileNoCheckPoints.close()
-
-#%% total of points
-#textFileTotalOfPoints = open('data/totalOfPoints.csv', "w")
-#textFileTotalOfPoints.write(totalOfPoints)
-#textFileTotalOfPoints.close()
-
-#%% Read check points
-dataCheckPoints = pd.read_csv('data/checkPoints.csv')
-
-#%% Check Info
-dataCheckPoints.head()
-
-#%% x values
-x_values = np.array(dataCheckPoints["x"])
-
-#%% sort x values
-x_values.sort()
-
-#%% x1 value
-x1 = x_values[0]
-
-#%% x4 value
-x4 = x_values[-1]
-
-#%% x1 value
-x3 = x1
-
-#%% x1 value
-x2 = x4
-
-#%% xyvalues
-y_values = np.array(dataCheckPoints["y"])
-
-#%% sort x values
-y_values.sort()
-
-#%% x1 value
-y1 = y_values[0]
-
-#%% x4 value
-y4 = y_values[-1]
-
-#%% x1 value
-y2 = y1
-
-#%% x1 value
-y3 = y4
-
-#%% Print X y Y values
-print("Points")
-print("x1 = {}, y1 = {}".format(x1,y1))
-print("x2 = {}, y2 = {}".format(x2,y2))
-print("x3 = {}, y3 = {}".format(x3,y3))
-print("x4 = {}, y4 = {}".format(x4,y4))
-
-#%% Generate the area
-areaPoints = "x,y\n"
-for u in range(1, x):
-    for v in range(1, y):
-        if (u >= x1 and u <= x4 and v >= y1 and v <= y4):
+    #%% Find marks
+    print("***** Searching for marks...")
+    for u in range(1, x):
+        for v in range(1, y):
             vR, vG, vB = pix[u, v]
             valueL, valueA, valueB = rgbToLab(vR, vG, vB)
-            statusColor = checkStatusArea(valueL, valueA, valueB)
+            statusColor = checkStatus(valueL, valueA, valueB)
             if statusColor:
-                pixelValue = convertColors(vR, vG, vB)
-                if (pixelValue == 0):
-                    tempText = str(u) + "-" + str(v)
-                    arrayColors.append(tempText)
-                    areaPoints += "{},{}\n".format(u,v)
-                    counterColors += 1
-                elif (pixelValue == 1):
-                    counterBackground += 1
+                checkPoints += "{},{},{},{},{}\n".format(u,v,valueL, valueA, valueB)
+                totalOfPoints += "{},{},1\n".format(u,v)
+            else:
+                noCheckPoints += "{},{},0\n".format(u,v)
+                totalOfPoints += "{},{},0\n".format(u,v)
+            counter += 1
+    print("***** Marks done...")
 
-#%% size of the side
-sideX = 24.0 / x
-sideY = 17.7 / y
+    #%% check points
+    print("***** Generating check points file...")
+    tempTitleFile = 'data/{}_checkPoints.csv'.format(tempTitle[0])
+    textFileCheckPoints = open(tempTitleFile, "w")
+    textFileCheckPoints.write(checkPoints)
+    textFileCheckPoints.close()
 
-#%% Generate area
-print("No pixeles de color: {}".format(counterColors))
-areaFoliar = (sideX * sideY) * counterColors
-print("Area Foliar: {} cm2".format(areaFoliar))
+    #%% no Check Points
+    #textFileNoCheckPoints = open('data/noCheckPoints.csv', "w")
+    #textFileNoCheckPoints.write(noCheckPoints)
+    #textFileNoCheckPoints.close()
 
-#%% area points
-textFileTotalOfPoints = open('data/areaPoints.csv', "w")
-textFileTotalOfPoints.write(areaPoints)
-textFileTotalOfPoints.close()
+    #%% total of points
+    #textFileTotalOfPoints = open('data/totalOfPoints.csv', "w")
+    #textFileTotalOfPoints.write(totalOfPoints)
+    #textFileTotalOfPoints.close()
 
-#%% generate scatter plot
+    #%% Read check points
+    tempTitleFile = 'data/{}_checkPoints.csv'.format(tempTitle[0])
+    dataCheckPoints = pd.read_csv(tempTitleFile)
 
-#%%	Scatter Plot
-dataScatterPlot = pd.read_csv("data/checkPoints.csv")
-xValues = dataScatterPlot['x']
-yValues = dataScatterPlot['y']
+    #%% Check Info
+    dataCheckPoints.head()
 
-plt.clf()
-fig, ax = plt.subplots()
-ax.set_title("Mapping")
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.scatter(xValues, yValues, color="blue", marker="o")
-ax.legend(['punto'])
-ax.grid(False)
-plt.savefig('results/test.png')
-plt.show()
+    #%% x values
+    x_values = np.array(dataCheckPoints["x"])
+
+    #%% sort x values
+    x_values.sort()
+
+    #%% x1 value
+    x1 = x_values[0]
+
+    #%% x4 value
+    x4 = x_values[-1]
+
+    #%% x2 value
+    x2 = x4
+
+    #%% x3 value
+    x3 = x1
+
+    #%% x values
+    y_values = np.array(dataCheckPoints["y"])
+
+    #%% sort x values
+    y_values.sort()
+
+    #%% x1 value
+    y1 = y_values[0]
+
+    #%% x4 value
+    y4 = y_values[-1]
+
+    #%% x2 value
+    y2 = y1
+
+    #%% x3 value
+    y3 = y4
+
+    #%% Print X y Y values
+    print("***** Points")
+    print("***** x1 = {}, y1 = {}".format(x1,y1))
+    print("***** x2 = {}, y2 = {}".format(x2,y2))
+    print("***** x3 = {}, y3 = {}".format(x3,y3))
+    print("***** x4 = {}, y4 = {}".format(x4,y4))
+
+    #%% Generate the area
+    areaPoints = "x,y,l,a,b\n"
+    print("***** Generating surface...")
+    for u in range(1, x):
+        for v in range(1, y):
+            if (u >= x1 and u <= x4 and v >= y1 and v <= y4):
+                vR, vG, vB = pix[u, v]
+                valueL, valueA, valueB = rgbToLab(vR, vG, vB)
+                statusColor = checkStatusArea(valueL, valueA, valueB)
+                if statusColor:
+                    pixelValue = convertColors(vR, vG, vB)
+                    if (pixelValue == 0):
+                        tempText = str(u) + "-" + str(v)
+                        arrayColors.append(tempText)
+                        areaPoints += "{},{},{},{},{}\n".format(u,v,valueL, valueA, valueB)
+                        counterColors += 1
+                    elif (pixelValue == 1):
+                        counterBackground += 1
+    
+    #%% print finish
+    print("***** Finish surface...")
+    
+    #%% size of the side
+    sideX = 24.0 / abs(x1-x4)
+    sideY = 17.7 / abs(y1-y4)
+
+    #%% Generate area
+    print("***** Color pixels: {}".format(counterColors))
+    areaFoliar = (sideX * sideY) * counterColors
+    print("***** Leaf Surface: {} cm2".format(areaFoliar))
+
+    #%% area points
+    tempTitleFile = 'data/{}_areaPoints.csv'.format(tempTitle[0])
+    textFileTotalOfPoints = open(tempTitleFile, "w")
+    textFileTotalOfPoints.write(areaPoints)
+    textFileTotalOfPoints.close()
+
+    #%% generate scatter plot
+
+    #%%	Scatter Plot
+    tempTitleFile = 'data/{}_areaPoints.csv'.format(tempTitle[0])
+    dataScatterPlot = pd.read_csv(tempTitleFile)
+    xValues = dataScatterPlot['x']
+    yValues = dataScatterPlot['y']
+
+    #%% plot the points
+    fig, ax = plt.subplots()
+    ax.set_title("Mapping")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.scatter(xValues, yValues, color="blue", marker="o")
+    ax.legend(['punto'])
+    ax.grid(False)
+    tempTitleFile = 'results/{}_area.png'.format(tempTitle[0])
+    plt.savefig(tempTitleFile)
