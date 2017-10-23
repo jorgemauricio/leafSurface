@@ -36,11 +36,8 @@ def checkStatusArea(vL, vA, vB):
     """
     Validación de los pixeles para contabilizar si son parte de la hoja
     """
-    # validate grayscale
-    if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5):
-        return False
-    # validate mark color
-    elif (vL >= 40 and vL <= 80 and vA >= 10 and vA <= 80 and vB >= -40 and vB <= 10):
+    # validate grayscale and mark points
+    if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5) or (vL >= 40 and vL <= 80 and vA >= 10 and vA <= 80 and vB >= -40 and vB <= 10):
         return False
     else:
         return True
@@ -50,16 +47,13 @@ def convertColors(vr, vg, vb):
 	r = vr/255.0
 	g = vg/255.0
 	b = vb/255.0
-	colorPixel = 0
 	h, l, s = colorsys.rgb_to_hls(r, g, b)
 	if(l >= 0.5):
 		#lighter color
-		colorPixel = 1
-		return colorPixel
-	elif (l < 0.5):
+		return False
+	else:
 		#darker color
-		colorPixel = 0
-		return colorPixel
+		return True
 
 # Function RGB to Lab
 def rgbToLab(vr, vg, vb):
@@ -168,7 +162,7 @@ print("Marks done...")
 
 #%% Start processing time
 endProcessing = strftime("%Y-%m-%d %H:%M:%S")
-print("Tiempo inicial: {}".format(endProcessing))
+print("Tiempo Final: {}".format(endProcessing))
 
 #%% check points
 textFileCheckPoints = open('data/checkPoints.csv', "w")
@@ -234,12 +228,12 @@ for u in range(1, x):
             statusColor = checkStatusArea(valueL, valueA, valueB)
             if statusColor:
                 pixelValue = convertColors(vR, vG, vB)
-                if (pixelValue == 0):
+                if (pixelValue):
                     tempText = str(u) + "-" + str(v)
                     arrayColors.append(tempText)
                     areaPoints += "{},{}\n".format(u,v)
                     counterColors += 1
-                elif (pixelValue == 1):
+                else:
                     counterBackground += 1
 
 #%% size of the side
