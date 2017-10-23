@@ -21,6 +21,9 @@ from os.path import expanduser
 
 #%% Functions
 def checkStatus(vL, vA, vB):
+    """
+    Validacion de las marcas, si el pixel coincide con algun color regresa True
+    """
     status = False
     if (vL >= 40 and vL <= 80) and (vA >= 50 and vA <= 80) and (vB >= -40 and vB <= 10):
         status = True
@@ -29,6 +32,9 @@ def checkStatus(vL, vA, vB):
     return status
 
 def checkStatusArea(vL, vA, vB):
+    """
+    Validación de los pixeles para contabilizar si son parte de la hoja
+    """
     status = False
     # validate grayscale
     if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5):
@@ -42,6 +48,10 @@ def checkStatusArea(vL, vA, vB):
 
 # Function RGB to HLS
 def convertColors(vr, vg, vb):
+    checkStatusArea(vL, vA, vB):
+    """
+    
+    """
 	r = vr/255.0
 	g = vg/255.0
 	b = vb/255.0
@@ -58,6 +68,10 @@ def convertColors(vr, vg, vb):
 
 # Function RGB to Lab
 def rgbToLab(vr, vg, vb):
+    checkStatusArea(vL, vA, vB):
+    """
+    Convertir los colores del espectro de color RGB a Lab
+    """
     r = (vr + 0.0) / 255
     g = (vg + 0.0) / 255
     b = (vb + 0.0) / 255
@@ -109,7 +123,7 @@ def rgbToLab(vr, vg, vb):
     	return var_L, var_a, var_b 
 
 #%% load image
-tempTitleImage = "images/4.jpg"
+tempTitleImage = "images/1.jpg"
 im = Image.open(tempTitleImage) # Can be many different formats.
 pix = im.load()
             
