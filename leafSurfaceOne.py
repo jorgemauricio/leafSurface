@@ -18,6 +18,7 @@ from time import gmtime, strftime
 from scipy import misc
 import pandas as pd
 from os.path import expanduser
+import datetime
 
 #%% estilo de la grafica
 plt.style.use('ggplot')
@@ -111,7 +112,7 @@ def rgbToLab(vr, vg, vb):
     	return var_L, var_a, var_b 
 
 #%% load image
-tempTitleImage = "images/1.jpg"
+tempTitleImage = "images/2.jpg"
 im = Image.open(tempTitleImage) # Can be many different formats.
 pix = im.load()
             
@@ -218,10 +219,15 @@ print("x2 = {}, y2 = {}".format(x2,y2))
 print("x3 = {}, y3 = {}".format(x3,y3))
 print("x4 = {}, y4 = {}".format(x4,y4))
 
+#%% tiempo de inicio
+startProcessing = strftime("%Y-%m-%d %H:%M:%S")
+dt_started = datetime.datetime.utcnow()
+print("Tiempo Inicial: {}".format(startProcessing))
+
 #%% Generate the area
 areaPoints = "x,y\n"
-for u in range(1, x):
-    for v in range(1, y):
+for u in range(x1, x4):
+    for v in range(y1, y4):
         if (u >= x1 and u <= x4 and v >= y1 and v <= y4):
             vR, vG, vB = pix[u, v]
             valueL, valueA, valueB = rgbToLab(vR, vG, vB)
@@ -235,6 +241,15 @@ for u in range(1, x):
                     counterColors += 1
                 else:
                     counterBackground += 1
+
+#%% tiempo inicial
+endProcessing = strftime("%Y-%m-%d %H:%M:%S")
+dt_ended = datetime.datetime.utcnow()
+print("Tiempo Final: {}".format(endProcessing))
+
+#%% tiempo de proceso
+print("Tiempo de proceamiento")
+print((dt_ended - dt_started).total_seconds())
 
 #%% size of the side
 sideX = 24.0 / abs(x1-x4)
