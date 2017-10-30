@@ -37,7 +37,7 @@ def checkStatusArea(vL, vA, vB):
     Validación de los pixeles para contabilizar si son parte de la hoja
     """
     # validate grayscale and mark points
-    if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5) or (vL >= 40 and vL <= 80 and vA >= 10 and vA <= 80 and vB >= -40 and vB <= 10):
+    if (vL >= 0 and vL <= 100 and vA > -5 and vA < 5 and vB > -5 and vB < 5) or (vL >= 40 and vL <= 80 and vA >= 50 and vA <= 80 and vB >= -40 and vB <= 10):
         return False
     else:
         return True
