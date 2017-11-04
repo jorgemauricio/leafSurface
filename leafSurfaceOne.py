@@ -25,7 +25,7 @@ plt.style.use('ggplot')
 
 def main():
     #%% load image
-    tempTitleImage = "images/3.jpg"
+    tempTitleImage = "images/1.jpg"
     im = Image.open(tempTitleImage) # Can be many different formats.
     pix = im.load()
                 
