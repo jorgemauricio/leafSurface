@@ -132,6 +132,22 @@ def main():
     print("x3 = {}, y3 = {}".format(x3,y3))
     print("x4 = {}, y4 = {}".format(x4,y4))
 
+    #%% determinar puntos intermedios X
+    for i in range(len(x_values)-2):
+        #print("Comparar: {} contra {} diferencia {}".format(x_values[i+1], x_values[i], x_values[i+1] - x_values[i]))
+        if abs(x_values[i] - x_values[i+1]) > 50:
+            xEvaluar1 = x_values[i]
+            break
+    for i in range(len(x_values)):
+        i = i * -1
+        j = i - 1
+        if abs(x_values[i] - x_values[j]) > 50:
+            xEvaluer4 = x_values[j]
+            break
+
+    print("xEvaluar1 = {}".format(xEvaluar1))
+    print("xEvaluer4 = {}".format(xEvaluer4))
+
     #%% tiempo de inicio
     startProcessing = strftime("%Y-%m-%d %H:%M:%S")
     dt_started = datetime.datetime.utcnow()
