@@ -23,9 +23,10 @@ import datetime
 #%% estilo de la grafica
 plt.style.use('ggplot')
 
+#%% - - - - MAIN - - - -
 def main():
     #%% load image
-    tempTitleImage = "images/1.jpg"
+    tempTitleImage = "images/4.jpg"
     im = Image.open(tempTitleImage) # Can be many different formats.
     pix = im.load()
                 
@@ -125,6 +126,12 @@ def main():
     #%% x1 value
     y3 = y4
 
+    #%% print x, y values
+    print(x_values[:15])
+    print(x_values[-15:])
+    print(y_values[:15])
+    print(y_values[-15:])
+
     #%% Print X y Y values
     print("Points")
     print("x1 = {}, y1 = {}".format(x1,y1))
@@ -134,19 +141,40 @@ def main():
 
     #%% determinar puntos intermedios X
     for i in range(len(x_values)-2):
-        #print("Comparar: {} contra {} diferencia {}".format(x_values[i+1], x_values[i], x_values[i+1] - x_values[i]))
         if abs(x_values[i] - x_values[i+1]) > 50:
             xEvaluar1 = x_values[i]
-            break
-    for i in range(len(x_values)):
-        i = i * -1
-        j = i - 1
-        if abs(x_values[i] - x_values[j]) > 50:
-            xEvaluer4 = x_values[j]
+            xEvaluar2 = x_values[i+1]
             break
 
-    print("xEvaluar1 = {}".format(xEvaluar1))
-    print("xEvaluer4 = {}".format(xEvaluer4))
+    #%% determinar puntos intermedios Y
+    for i in range(len(y_values)-2):
+        if abs(y_values[i] - y_values[i+1]) > 50:
+            yEvaluar1 = y_values[i]
+            yEvaluar3 = y_values[i+1]
+            break
+
+    #%% asignar valores a x1, x4
+    x1 = xEvaluar1
+    x4 = xEvaluar2
+
+    #%% asignar valores a y1, y3
+    y1 = yEvaluar1
+    y3 = yEvaluar3
+
+    #%% asignar valores a x2, x3
+    x3 = x1
+    x2 = xEvaluar2
+
+    #%% aisgnar valores a y2, y3
+    y4 = y3
+    y2 = y1
+
+    #%% Print X y Y values
+    print("Points")
+    print("x1 = {}, y1 = {}".format(x1,y1))
+    print("x2 = {}, y2 = {}".format(x2,y2))
+    print("x3 = {}, y3 = {}".format(x3,y3))
+    print("x4 = {}, y4 = {}".format(x4,y4))
 
     #%% tiempo de inicio
     startProcessing = strftime("%Y-%m-%d %H:%M:%S")
@@ -157,19 +185,19 @@ def main():
     areaPoints = "x,y\n"
     for u in range(x1, x4):
         for v in range(y1, y4):
-            if (u >= x1 and u <= x4 and v >= y1 and v <= y4):
-                vR, vG, vB = pix[u, v]
-                valueL, valueA, valueB = convertirRGBtoLAB(vR, vG, vB)
-                statusColor = validarArea(valueL, valueA, valueB)
-                if statusColor:
-                    pixelValue = validarSiEsHoja(vR, vG, vB)
-                    if (pixelValue):
-                        tempText = str(u) + "-" + str(v)
-                        arrayColors.append(tempText)
-                        areaPoints += "{},{}\n".format(u,v)
-                        counterColors += 1
-                    else:
-                        counterBackground += 1
+            vR, vG, vB = pix[u, v]
+            valueL, valueA, valueB = convertirRGBtoLAB(vR, vG, vB)
+            statusColor = validarArea(valueL, valueA, valueB)
+            if statusColor:
+                pixelValue = validarSiEsHoja(vR, vG, vB)
+                if (pixelValue):
+                    tempText = str(u) + "-" + str(v)
+                    arrayColors.append(tempText)
+                    areaPoints += "{},{}\n".format(u,v)
+                    counterColors += 1
+                else:
+                    counterBackground += 1
+                
 
     #%% tiempo inicial
     endProcessing = strftime("%Y-%m-%d %H:%M:%S")
@@ -181,8 +209,8 @@ def main():
     print((dt_ended - dt_started).total_seconds())
 
     #%% size of the side
-    sideX = 24.0 / abs(x1-x4)
-    sideY = 17.7 / abs(y1-y4)
+    sideX = 20.4 / abs(x1-x4)
+    sideY = 14.0 / abs(y1-y4)
 
     #%% Generate area
     print("***** Color pixels: {}".format(counterColors))
@@ -215,7 +243,7 @@ def main():
     plt.savefig(tempTitleFile)
 
 
-#%% Functions
+#%% - - - - FUNCTIONS - - - - 
 def encontrarMarcas(vL, vA, vB):
     """
     Validacion de las marcas, si el pixel coincide con algun color regresa True
