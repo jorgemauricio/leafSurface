@@ -50,8 +50,6 @@ def main():
 
     totalOfPoints = "x,y,v\n"
     checkPoints = "x,y,v\n"
-    noCheckPoints = "x,y,v\n"
-
 
     #%% Start processing time
     startProcessing = strftime("%Y-%m-%d %H:%M:%S")
@@ -68,7 +66,6 @@ def main():
                 checkPoints += "{},{},1\n".format(u,v)
                 totalOfPoints += "{},{},1\n".format(u,v)
             else:
-                noCheckPoints += "{},{},0\n".format(u,v)
                 totalOfPoints += "{},{},0\n".format(u,v)
             counter += 1
     print("Marks done...")
