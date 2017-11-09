@@ -82,9 +82,6 @@ def main():
     #%% Read check points
     dataCheckPoints = pd.read_csv('data/checkPoints.csv')
 
-    #%% Check Info
-    dataCheckPoints.head()
-
     #%% x values
     x_values = np.array(dataCheckPoints["x"])
 
