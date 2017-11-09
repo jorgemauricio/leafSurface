@@ -10,7 +10,6 @@ Created on Wed Jul 19 11:11:18 2017
 from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
-import csv
 import os
 import sys
 import colorsys
@@ -29,19 +28,19 @@ def main():
     tempTitleImage = "images/4.jpg"
     im = Image.open(tempTitleImage) # Can be many different formats.
     pix = im.load()
-                
+
     #%% size of the image
     x, y = im.size  # size of the image
     print("X: %d Y: %d" % (x, y))
 
-    #%% Total of pixels 
+    #%% Total of pixels
     totalPixeles = x * y      # Print Y
     print("Total de pixeles: %d" % totalPixeles)
 
     #%% variables
     counter = 0.0
     counterBackground = 0
-    counterColors = 0 
+    counterColors = 0
     arrayColors = []
     #statusColor = False
     statusCounting = False
@@ -182,22 +181,23 @@ def main():
     print("Tiempo Inicial: {}".format(startProcessing))
 
     #%% Generate the area
-    areaPoints = "x,y\n"
+    areaPoints = "x,y,color\n"
     for u in range(x1, x4):
         for v in range(y1, y4):
             vR, vG, vB = pix[u, v]
             valueL, valueA, valueB = convertirRGBtoLAB(vR, vG, vB)
             statusColor = validarArea(valueL, valueA, valueB)
+            colorOfThePixel = clasificacionDecolor(valueL, valueA, valueB)
             if statusColor:
                 pixelValue = validarSiEsHoja(vR, vG, vB)
                 if (pixelValue):
                     tempText = str(u) + "-" + str(v)
                     arrayColors.append(tempText)
-                    areaPoints += "{},{}\n".format(u,v)
+                    areaPoints += "{},{},{}\n".format(u,v, colorOfThePixel)
                     counterColors += 1
                 else:
                     counterBackground += 1
-                
+
 
     #%% tiempo inicial
     endProcessing = strftime("%Y-%m-%d %H:%M:%S")
@@ -230,20 +230,21 @@ def main():
     dataScatterPlot = pd.read_csv(tempTitleFile)
     xValues = dataScatterPlot['x']
     yValues = dataScatterPlot['y']
+    cValues = dataScatterPlot['color']
 
     #%% plot the points
-    fig, ax = plt.subplots()
-    ax.set_title("Mapping")
+    fig, ax = plt.subplots(figsize=(15,10))
+    ax.set_title("Colores en hoja")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    ax.scatter(xValues, yValues, color="blue", marker="o")
+    ax.scatter(xValues, yValues, c=cValues, cmap='viridis', marker="o")
     ax.legend(['punto'])
     ax.grid(False)
     tempTitleFile = 'results/area.png'
-    plt.savefig(tempTitleFile)
+    plt.savefig(tempTitleFile, dpi=300)
 
 
-#%% - - - - FUNCTIONS - - - - 
+#%% - - - - FUNCTIONS - - - -
 def encontrarMarcas(vL, vA, vB):
     """
     Validacion de las marcas, si el pixel coincide con algun color regresa True
@@ -346,7 +347,31 @@ def convertirRGBtoLAB(vr, vg, vb):
     if (var_L >= 0 and var_L <= 100 and var_a == 0 and var_b == 0):
     	return 0.0, 0.0, 0.0
     else:
-    	return var_L, var_a, var_b 
+    	return var_L, var_a, var_b
+
+# funcion para determinar el porcentaje de color verde
+def clasificacionDecolor(L,a,b):
+    """
+    Determina la clasificacion del color mediante los espectros de color Lab
+    param: L: valor L
+    param: a: valor a
+    param: b: valor b
+    regresa v: verde, r: rojo, c: cafe, a: amarillo, n: naranja, az: azul, f: fondo
+    """
+    if L >= 2 and L <= 73 and a >= -64 and a <= -2 and b >= 3 and b <= 72:
+        return 6
+    elif L >= 74 and L <= 99 and a >= -66 and a <= -4 and b >= 5 and b <= 95:
+        return 5
+    elif L >= 41 and L <= 94 and a >= -18 and a <= -10 and b >= 48 and b <= 80:
+        return 4
+    elif L >= 3 and L <= 67 and a >= 2 and a <= 42 and b >= 4 and b <= 75:
+        return 2
+    elif L >= 10 and L <= 60 and a >= -14 and a <=-5 and b >= 15 and b <= 64:
+        return 3
+    elif L >= 2 and L <= 19 and a >= 11 and a <= 40 and b >= 4 and b <= 29:
+        return 1
+    else:
+        return 0
 
 if __name__ == "__main__":
     main()
