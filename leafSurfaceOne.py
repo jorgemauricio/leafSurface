@@ -14,7 +14,6 @@ import os
 import sys
 import colorsys
 from time import gmtime, strftime
-from scipy import misc
 import pandas as pd
 from os.path import expanduser
 import datetime
