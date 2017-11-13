@@ -24,7 +24,7 @@ plt.style.use('ggplot')
 #%% - - - - MAIN - - - -
 def main():
     #%% load image
-    tempTitleImage = "images/4.jpg"
+    tempTitleImage = "images/9.jpg"
     im = Image.open(tempTitleImage) # Can be many different formats.
     pix = im.load()
 
@@ -230,10 +230,10 @@ def main():
     ax.set_title("Colores en hoja")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    ax.scatter(xValues, yValues, c=cValues, cmap='viridis', marker="o")
+    ax.scatter(xValues, yValues, c=cValues, cmap='Greens', marker="o", s=1)
     ax.legend(['punto'])
     ax.grid(False)
-    tempTitleFile = 'results/area.png'
+    tempTitleFile = 'results/area7.png'
     plt.savefig(tempTitleFile, dpi=300)
 
 
